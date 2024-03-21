@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <title>Create Event</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    h3 {
+      text-align: center;
+    }
+    input[type="text"], input[type="date"], select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box; 
+    }
+    input[type="file"] {
+      margin-bottom: 15px;
+    }
+    #uploadBtn {
+      background-color: #3f0e38;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #uploadBtn:hover {
+      background-color: #6a4565;
+    }
+    #image_url {
+      margin-bottom: 15px;
+    }
+    button[type="submit"] {
+      background-color: #3f0e38;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button[type="submit"]:hover {
+      background-color: #6a4565;
+    }
+    /* Media query for smaller screens */
+    @media screen and (max-width: 500px) {
+      .container {
+        padding: 10px;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    {{> creators-header-form }}
+  </header>
+
+  <h3><b>Create Event</b></h3>
+  {{#if messages.error}}
+    <div class="alert alert-danger text-center">
+      <li>{{messages.error}}</li>
+    </div>
+  {{/if}}
+  {{#if messages.success}}
+    <div class="alert alert-success text-center">
+      <li>{{messages.success}}</li>
+    </div>
+  {{else}}
+    <div class="container">
+      <form action="/views/creators/events/create" method="post">
+        <label for="image_url"><b>Event Image URL:</b></label><br>
+        <input type="text" name="image_url" id="image_url" placeholder="Paste image url" required>
+        <label for="event_name"><b>Event Title:</b></label><br>
+        <input type="text" name="event_name" id="event_name" placeholder="Event Title" required>
+        <label for="description"><b>Description:</b></label><br>
+        <input type="text" name="description" id="description" placeholder="Description" required>
+        <label for="location"><b>Location:</b></label><br>
+        <input type="text" name="location" id="location" placeholder="Location" required>
+        <label for="sponsors"><b>Sponsors:</b></label><br>
+        <textarea name="sponsors" id="sponsors" placeholder="Enter sponsors separated by commas" required></textarea>
+        <label for="event_type"><b>Event Type:</b></label><br>
+        <input type="text" name="event_type" id="event_type" placeholder="Event Type" required>
+        <label for="event_date"><b>Event Date:</b></label><br>
+        <input type="date" name="event_date" id="event_date" min="{{currentDate}}" required>
+        <select name="reminder_days" id="reminder_days" required>
+          <option value="0">Select Reminder:</option>
+        </select>
+        <input required type="text" name="reminder_date" id="reminder_date" readonly>
+        <button type="submit"><b>Create Event</b></button>
+      </form>
+    </div>
+  {{/if}}
+
+  <footer>
+    {{> creators-footer}}
+  </footer>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentDate = new Date().toISOString().split('T')[0];
+      document.querySelector('input[name="event_date"]').setAttribute('min', currentDate);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const eventDateInput = document.getElementById('event_date');
+      const reminderDaysSelect = document.getElementById('reminder_days');
+      const reminderDateInput = document.getElementById('reminder_date');
+
+      eventDateInput.addEventListener('change', function() {
+        const selectedDate = new Date(eventDateInput.value);
+        const today = new Date();
+        const differenceInDays = Math.ceil((selectedDate - today) / (1000 * 60 * 60 * 24));
+
+        reminderDaysSelect.innerHTML = ''; // Clear existing options
+        const option = document.createElement('option');
+        option.value = '0';
+        option.text = 'Select Reminder';
+        reminderDaysSelect.appendChild(option);
+
+        // Add options from 1 to 7 days before the event date
+        for (let i = 1; i <= 7 && i <= differenceInDays; i++) {
+          const option = document.createElement('option');
+          option.value = i.toString();
+          option.text = `${i} Day${i > 1 ? 's' : ''} Before Event`;
+          reminderDaysSelect.appendChild(option);
+        }
+
+        // Reset the selected option
+        reminderDaysSelect.selectedIndex = 0;
+
+        // Clear reminder date when event date changes
+        reminderDateInput.value = '';
+      });
+
+      // Add event listener for changing the selected reminder day
+      reminderDaysSelect.addEventListener('change', function() {
+        if (reminderDaysSelect.value === '0') {
+          // Clear reminder date when "Select Reminder" is chosen
+          reminderDateInput.value = '';
+        } else {
+          const selectedDate = new Date(eventDateInput.value);
+          const selectedReminderDay = parseInt(reminderDaysSelect.value);
+          const reminderDate = new Date(selectedDate);
+          reminderDate.setDate(reminderDate.getDate() - selectedReminderDay);
+          reminderDateInput.value = reminderDate.toISOString().split('T')[0];
+        }
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', function(event) {
+      const reminderDateInput = document.getElementById('reminder_date');
+
+      if (!reminderDateInput.value) {
+        event.preventDefault(); // Prevent form submission
+        alert('Please select a reminder date.'); // Display an alert to the user
+      }
+    });
+  });
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Homepage</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      margin-top: 30px;
+      color: #333;
+    }
+
+    p {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      margin-top: 50px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 15px 30px;
+      background-color: #3f0e38;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1.2em;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background-color: #6a4565;
+    }
+
+    @media only screen and (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+      p {
+        font-size: 1em;
+      }
+      .btn {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    {{> users-header }}
+  </header>
+  <div class="container">
+    <h3>Welcome, {{user.first_name}} {{user.last_name}}</h3>
+      <p>We're thrilled to have you here!</p>
+      <p>Explore exciting events tailored just for you. Whether it's music concerts, art exhibitions, tech conferences, or food festivals, there's something for everyone.</p>
+      <p>Stay Eventful. Stay connected!</p>
+      <p>Ready to dive in?</p><br><br>
+      <a href="/views/users/events" id="events" class="btn">Explore Events</a>
+      <a href="/views/users/my-events" id="my-events" class="btn">My Events</a>
+  </div>
+
+  <footer>
+    {{> users-footer}}
+  </footer>
+
+
+</body>
+</html>

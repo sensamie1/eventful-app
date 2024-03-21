@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Not Verified</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        margin-top: 100px;
+        margin-bottom: 300px;
+      }
+      
+      a {
+        text-decoration: none;
+        color: #3f0e38;
+      }
+
+      /* Media Query for Mobile Devices */
+      @media only screen and (max-width: 600px) {
+        .container {
+          margin-top: 50px;
+        }
+
+        h2 {
+          font-size: 20px;
+        }
+
+        p {
+          font-size: 14px;
+          margin-bottom: 15px;
+        }
+
+        }
+    </style>
+</head>
+<body>
+
+  <header>
+    {{> creators-header }}
+  </header>
+
+  <div class="container">
+    <h2>Email Unverified</h2>
+    <p>Your Email has not been verified.</p>
+    <p>Please check your Email for verification link or request a new verification link with your Email <strong><a href="http://{{env.HOST}}:{{env.PORT}}/views/creators/resend-verification-email">here</a></strong>.</p>
+  </div>
+
+  <footer>
+    {{> creators-footer}}
+  </footer>
+
+</body>
+</html>

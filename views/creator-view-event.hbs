@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .event-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .event-card {
+      /**width: 30%;**/
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+    }
+
+    .event-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .event-description {
+      margin-bottom: 10px;
+    }
+
+    .event-location {
+      margin-bottom: 10px;
+    }
+
+    .event-sponsors {
+      margin-bottom: 10px;
+    }
+
+    .event-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .event-date {
+      color: #3f0e38;
+    }
+
+    .event-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .attendee-btn {
+      background-color: #3f0e38;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .attendee-btn:hover {
+      background-color: #6a4565;
+    }
+
+    .disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+
+    #error-message {
+      color: #dc3545;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 5px;
+      margin: 10px 0;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    #success-message {
+      color: #28a745;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .event-card img {
+      max-width: 100%; 
+      max-height: 200px; 
+      object-fit: cover; 
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .event-card {
+        width: 45%;
+      }
+    }
+
+    @media only screen and (max-width: 480px) {
+      .event-card {
+        width: 100%;
+      }
+    }
+  </style>
+  <script>
+    
+    function formatDate(date) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(date).toLocaleDateString('en-US', options);
+    }
+
+    window.onload = function() {
+      const elements = document.getElementsByClassName('dateElement');
+      for (let i = 0; i < elements.length; i++) {
+        const currentDate = new Date(elements[i].textContent);
+        const formattedDate = formatDate(currentDate);
+        elements[i].textContent = formattedDate;
+      }
+    };
+
+  </script>
+</head>
+<body>
+  <header>
+    {{> creators-header}}
+  </header>
+  {{#if messages.error}}
+    <div id="error-message">
+      <ul>
+        {{#each messages.error}}
+          <li>{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+  {{#if messages.success}}
+    <div id="success-message">
+      <li>{{messages.success}}</li>
+    </div>
+  {{else}}
+    <h2>Events</h2>
+    
+    <div class="event-container">
+      <div class="event-card">
+        <div class="event-title"><img src="{{event.image_url}}" alt="event-image"></div>
+        <div class="event-title">Event Title: {{event.event_name}}</div>
+        <div class="event-description"><b>Description:</b> {{event.description}}</div>
+        <div class="event-location"><b>Location:</b> {{event.location}}</div>
+        <div class="event-sponsors"><b>Sponsors:</b> {{event.sponsors}}</div>
+        <div class="event-meta">
+          <b>Date: <div class="event-date dateElement">{{event.event_date}}</div></b>
+        </div>
+        <i>
+          <b>
+            <p>Sign up or login as an attendee</p><p>to book ticket for this event!</p>
+          </b>
+        </i>
+        <div class="event-actions">
+          <a href="/views/users" target="_blank">
+            <button class="attendee-btn">Attendee</button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  {{/if}}
+
+
+  <footer>
+    {{> creators-footer}}
+  </footer>
+
+</body>
+</html>

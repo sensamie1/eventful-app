@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin-top: 50px;
+      /**background-color: #f9f9f9;**/
+    }
+
+    .intro {
+      max-width: 600px;
+      padding: 20px;
+      margin-top: -200px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px;
+      border: 2px solid #3f0e38;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #3f0e38;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #6a4565;
+      color: #fff;
+    }
+
+    @media screen and (max-width: 768px) {
+      .intro {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    {{> creators-header }}
+  </header>
+  <div class="container">
+    <div class="intro">
+      <h2>Welcome to Eventful!</h2>
+      <p>Eventful isn't just another ticketing platform; it's your gateway to a world of unforgettable experiences. Whether you're a seasoned event organizer or aspiring to host your first event, Eventful empowers you to create, promote, and manage events that leave a lasting impression.</p>
+      <p>With Eventful, you can bring your event ideas to life, connect with your audience, and make meaningful experiences happen. From music festivals to workshops, from sports tournaments to community gatherings, Eventful provides the tools and support you need to succeed as an event creator.</p>
+      <p>Sign up or log in to start creating your events today, and join us in shaping the future of live experiences!</p>
+      <p><strong>Eventful Team!</strong></p>
+      
+      <a class="btn" href="/views/creators/login">Login</a>
+      <a class="btn" href="/views/creators/signup">Sign Up</a>
+      <a class="btn" href="/views/users" target="_blank">Attendee</a>
+
+      
+    </div>
+  </div>
+  
+  <footer>
+    {{> creators-footer}}
+  </footer>
+
+
+</body>
+</html>

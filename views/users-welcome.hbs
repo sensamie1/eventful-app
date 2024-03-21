@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin-top: 50px;
+      /**background-color: #f9f9f9;**/
+    }
+
+    .intro {
+      max-width: 600px;
+      padding: 20px;
+      margin-top: -200px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px;
+      border: 2px solid #3f0e38;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #3f0e38;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #6a4565;
+      color: #fff;
+    }
+
+    @media screen and (max-width: 768px) {
+      .intro {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    {{> users-header}}
+  </header>
+  <div class="container">
+    <div class="intro">
+      <h2>Welcome to Eventful!</h2>
+      <p>Eventful isn't just another ticketing platform; it's your gateway to a world of unforgettable experiences. Whether you're a music aficionado, theater enthusiast, sports fanatic, or cultural connoisseur, Eventful curates a diverse array of events tailored to every taste and passion.</p>
+      <p>With Eventful, you can browse and attend events, book tickets, and access event details. Experience the convenience of our app and embark on your next event adventure.</p>
+      <p>Sign up or log to book ticket for an events, or click on "Creator" to become an event creator with us!</p>
+      <p><strong>Eventful Team!</strong></p>
+      
+      <a class="btn" href="/views/users/login">Login</a>
+      <a class="btn" href="/views/users/signup">Sign Up</a>
+      <a class="btn" href="/views/creators" target="_blank">Creator</a>
+
+      
+    </div>
+  </div>
+  
+  <footer>
+    {{> users-footer}}
+  </footer>
+
+
+</body>
+</html>

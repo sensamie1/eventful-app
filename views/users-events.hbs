@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .event-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .event-card {
+      /**width: 30%;**/
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+    }
+
+    .event-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .event-description {
+      margin-bottom: 10px;
+    }
+
+    .event-location {
+      margin-bottom: 10px;
+    }
+
+    .event-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .event-date {
+      color: #3f0e38;
+    }
+
+    .event-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .view-btn {
+      background-color: #3f0e38;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .view-btn:hover {
+      background-color: #3f0e38;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .pagination a {
+      padding: 10px 20px;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      background-color: #505459;
+      margin: 0 10px;
+    }
+
+    .disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+
+    #error-message {
+      color: #dc3545;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 5px;
+      margin: 10px 0;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    #success-message {
+      color: #28a745;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .event-card img {
+      max-width: 100%; 
+      max-height: 200px; 
+      object-fit: cover; 
+    }
+
+    @media only screen and (max-width: 768px) {
+      .event-card {
+        width: 45%;
+      }
+    }
+
+    @media only screen and (max-width: 480px) {
+      .event-card {
+        width: 100%;
+      }
+    }
+  </style>
+  <script>
+    
+    function formatDate(date) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(date).toLocaleDateString('en-US', options);
+    }
+
+    window.onload = function() {
+      const elements = document.getElementsByClassName('dateElement');
+      for (let i = 0; i < elements.length; i++) {
+        const currentDate = new Date(elements[i].textContent);
+        const formattedDate = formatDate(currentDate);
+        elements[i].textContent = formattedDate;
+      }
+    };
+
+  </script>
+</head>
+<body>
+  <header>
+    {{> users-header}}
+  </header>
+  {{#if messages.error}}
+    <div id="error-message">
+      <ul>
+        {{#each messages.error}}
+          <li>{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+  {{#if messages.success}}
+    <div id="success-message">
+      <li>{{messages.success}}</li>
+    </div>
+  {{else}}
+    <h2>Events</h2>
+    
+    <div class="event-container">
+      {{#each events as |event|}}
+          <div class="event-card">
+            <div class="event-title"><img src="{{event.image_url}}" alt="event-image"></div>
+            <div class="event-title">{{event.event_name}}</div>
+            <div class="event-description">{{event.description}}</div>
+            <div class="event-location">{{event.location}}</div>
+            <div class="event-meta">
+              <b>
+                <div class="event-date dateElement"><strong>{{event.event_date}}</strong></div>
+              </b>
+            </div>
+            <div class="event-actions">
+              <a href="/views/users/events/{{event._id}}">
+                <button class="view-btn">View Event</button>
+              </a>
+            </div>
+          </div>
+      {{/each}}
+    </div>
+  {{/if}}
+
+
+  <footer>
+    {{> users-footer}}
+  </footer>
+</body>
+</html>

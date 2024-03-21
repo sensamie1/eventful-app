@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Side Navigation Bar</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #a8a0a7;
+      background: linear-gradient(to bottom, #ba88b3 0%, #a8a0a7 100%);
+    }
+
+    .sidenav {
+      height: 100%;
+      width: 250px;
+      position: fixed;
+      top: 0;
+      left: -250px;
+      background-color: #3f0e38;
+      padding-top: 60px;
+      transition: 0.5s;
+    }
+
+    .sidenav a {
+      padding: 10px 15px;
+      text-decoration: none;
+      font-size: 18px;
+      color: #fff;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidenav a:hover {
+      background-color: #6a4565;
+    }
+
+    .logo-image {
+      display: block;
+      width: 200px;
+      height: auto;
+      border-radius: 5px;
+      margin: 0 auto;
+      margin-top: 20px;
+    }
+
+    .logo-image1 {
+      display: block;
+      width: 300px;
+      height: auto;
+      border-radius: 5px;
+      margin: 0 auto;
+      margin-top: 20px;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding-left: 5px;
+      padding-right: 5px;
+      background-color: #3f0e38;
+      color: #fff;
+      z-index: 2;
+    }
+
+  
+    /* Media query for screens smaller than 768px */
+    @media screen and (max-width: 768px) {
+      .sidenav {
+        width: 200px;
+      }
+      .content {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidenav" id="sidenav">
+    {{#if user}}
+      <a href="/views/users/user-home" class="active"><i class="fa fa-home" style="padding-right: 10px;"></i>Home ({{user.first_name}})</a>
+      <a href="/views/users/events" class="active"><i class="fa fa-calendar" style="font-size:18px; padding-right: 10px;"></i></i>Events</a>
+      <a href="/views/users/my-events"><i class="fa fa-calendar-check-o" style="font-size:18px; padding-right: 10px;"></i>My Events</a>
+      <a href="/views/users/logout"><i class="fa fa-sign-out" aria-hidden="true" style="padding-right: 10px;"></i>Logout</a>
+      <a href="/views/creators/welcome" target="_blank"><i class="fa fa-id-card-o" style="font-size:18px; padding-right: 10px;"></i>Become a Creator</a>
+      <a href="mailto:sen4word@gmail.com" target="_blank"><i class="fa fa-envelope" style="font-size: large; padding-right: 10px;"></i></i>Contact Us</a>
+
+      {{!-- <img src="https://res.cloudinary.com/ddi6arl8i/image/upload/v1709984366/eventful-logo_mczyov.png" alt="Eventful Logo" class="logo-image"> --}}
+      <img src="https://res.cloudinary.com/ddi6arl8i/image/upload/v1710926275/Logos/eventful-logo-removebg-preview_wjpzev.png" alt="Eventful Logo" class="logo-image">
+
+
+      
+    {{else}}
+      <a href="/views/users/welcome" class="active"><i class="fa fa-home" style="padding-right: 10px;"></i>Home</a>
+      <a href="/views/users/events" class="active"><i class="fa fa-calendar" style="font-size:18px; padding-right: 10px;"></i>Events</a>
+      <a href="/views/users/login"><i class="fa fa-sign-in" aria-hidden="true" style="padding-right: 10px;"></i>Login</a>
+      <a href="/views/users/signup"><i class="fa fa-fw fa-user" style="padding-right: 5px;"></i>Signup</a>
+      <a href="/views/creators/welcome" target="_blank"><i class="fa fa-id-card-o" style="font-size:18px; padding-right: 10px;"></i>Creator</a>
+      <a href="mailto:sen4word@gmail.com" target="_blank"><i class="fa fa-envelope" style="font-size: large; padding-right: 10px;"></i></i>Contact Us</a>
+      
+      {{!-- <img src="https://res.cloudinary.com/ddi6arl8i/image/upload/v1709984366/eventful-logo_mczyov.png" alt="Eventful Logo" class="logo-image"> --}}
+      <img src="https://res.cloudinary.com/ddi6arl8i/image/upload/v1710926275/Logos/eventful-logo-removebg-preview_wjpzev.png" alt="Eventful Logo" class="logo-image">
+
+    {{/if}} 
+  <span class="menu-icon" onclick="toggleNav()" style="font-size: 32px; font-weight: bold;">&#9776;</span>
+  </div>
+
+  {{!-- <img src="https://res.cloudinary.com/ddi6arl8i/image/upload/v1709984366/eventful-logo_mczyov.png" alt="Eventful Logo" class="logo-image1"> --}}
+  <img src="https://res.cloudinary.com/ddi6arl8i/image/upload/v1710926275/Logos/eventful-logo-removebg-preview_wjpzev.png" alt="Eventful Logo" class="logo-image1">
+  
+
+  <script>
+    function toggleNav() {
+      var sidenav = document.getElementById("sidenav");
+      if (sidenav.style.left === "-250px") {
+        sidenav.style.left = "0";
+      } else {
+        sidenav.style.left = "-250px";
+      }
+    }
+
+    // Close the sidebar if the user clicks anywhere outside the sidebar
+    window.onclick = function(event) {
+      var sidenav = document.getElementById("sidenav");
+      if (event.target !== sidenav && event.target.className !== "menu-icon") {
+        sidenav.style.left = "-250px";
+      }
+    };
+  </script>
+
+</body>
+</html>

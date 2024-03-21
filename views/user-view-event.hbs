@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .event-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .event-card {
+      /**width: 30%;**/
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+    }
+
+    .event-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .event-description {
+      margin-bottom: 10px;
+    }
+
+    .event-location {
+      margin-bottom: 10px;
+    }
+
+    .event-sponsors {
+      margin-bottom: 10px;
+    }
+
+    .event-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .event-date {
+      color: #3f0e38;
+    }
+
+    .event-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .book-btn {
+      background-color: #3f0e38;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .book-btn:hover {
+      background-color: #3f0e38;
+    }
+
+    .disabled {
+      background-color: gray;
+      cursor: not-allowed;
+    }
+
+    #error-message {
+      color: #dc3545;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 5px;
+      margin: 10px 0;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    #success-message {
+      color: #28a745;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .event-card img {
+      max-width: 100%; 
+      max-height: 200px; 
+      object-fit: cover; 
+    }
+
+    @media only screen and (max-width: 768px) {
+      .event-card {
+        width: 45%;
+      }
+    }
+
+    @media only screen and (max-width: 480px) {
+      .event-card {
+        width: 100%;
+      }
+    }
+  </style>
+  <script>
+    
+    function formatDate(date) {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(date).toLocaleDateString('en-US', options);
+    }
+
+    window.onload = function() {
+      const elements = document.getElementsByClassName('dateElement');
+      for (let i = 0; i < elements.length; i++) {
+        const currentDate = new Date(elements[i].textContent);
+        const formattedDate = formatDate(currentDate);
+        elements[i].textContent = formattedDate;
+      }
+    };
+
+  </script>
+</head>
+<body>
+  <header>
+    {{> users-header}}
+  </header>
+  {{#if messages.error}}
+    <div id="error-message">
+      <ul>
+        {{#each messages.error}}
+          <li>{{this}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
+  {{#if messages.success}}
+    <div id="success-message">
+      <li>{{messages.success}}</li>
+    </div>
+  {{else}}
+    <h2>Event</h2>
+    
+    <div class="event-container">
+      <div class="event-card">
+        <div class="event-title"><img src="{{event.image_url}}" alt="event-image"></div>
+        <div class="event-title">Event Title: {{event.event_name}}</div>
+        <div class="event-description"><b>Description:</b> {{event.description}}</div>
+        <div class="event-location"><b>Location:</b> {{event.location}}</div>
+        <div class="event-sponsors"><b>Sponsors:</b> {{event.sponsors}}</div>
+        <div class="event-meta">
+          <b>Date: <div class="event-date dateElement">{{event.event_date}}</div></b>
+        </div>
+        <!-- Form for selecting reminder date and booking ticket -->
+        <form id="booking_form" action="/views/users/events/{{event._id}}/book" method="post">
+          <input type="hidden" name="event_id" value="{{event._id}}">
+          <input type="hidden" name="event_date" id="event_date" value="{{event.event_date}}">
+          <select name="user_reminder_days" id="user_reminder_days" required>
+            <option value="0">Select Reminder</option>
+          </select>
+          <br>
+          <input type="text" name="user_reminder_date" id="user_reminder_date" readonly>
+          <button type="submit" class="book-btn">Book Ticket</button>
+        </form>
+      </div>
+    </div>
+
+  {{/if}}
+
+
+  <footer>
+    {{> users-footer}}
+  </footer>
+
+  
+  <!-- JavaScript for dynamic reminder selection -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const eventDateInput = document.getElementById('event_date');
+    const reminderDaysSelect = document.getElementById('user_reminder_days');
+    const reminderDateInput = document.getElementById('user_reminder_date');
+
+    // Function to generate options for selecting a reminder date
+    function generateOptions(start, end) {
+      const options = [];
+      for (let i = start; i <= end; i++) {
+        options.push(i);
+      }
+      return options;
+    }
+
+    // Function to update reminder options based on event date
+    function updateReminderOptions() {
+      const selectedDate = new Date(eventDateInput.value);
+      const today = new Date();
+      const differenceInDays = Math.ceil((selectedDate - today) / (1000 * 60 * 60 * 24));
+
+      reminderDaysSelect.innerHTML = ''; // Clear existing options
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '0';
+      defaultOption.text = 'Select Reminder';
+      reminderDaysSelect.appendChild(defaultOption);
+
+      // Add options from 1 to 7 days before the event date
+      for (let i = 1; i <= 7 && i <= differenceInDays; i++) {
+        const option = document.createElement('option');
+        option.value = i.toString();
+        option.text = `${i} Day${i > 1 ? 's' : ''} Before Event`;
+        reminderDaysSelect.appendChild(option);
+      }
+    }
+
+    // Attach event listener to event date input
+    eventDateInput.addEventListener('change', function() {
+      updateReminderOptions();
+    });
+
+    // Attach event listener to reminder days select
+    reminderDaysSelect.addEventListener('change', function() {
+      if (reminderDaysSelect.value === '0') {
+        // Clear reminder date when "Select Reminder" is chosen
+        reminderDateInput.value = '';
+      } else {
+        const selectedDate = new Date(eventDateInput.value);
+        const selectedReminderDay = parseInt(reminderDaysSelect.value);
+        const reminderDate = new Date(selectedDate);
+        reminderDate.setDate(reminderDate.getDate() - selectedReminderDay);
+        reminderDateInput.value = reminderDate.toISOString().split('T')[0];
+      }
+    });
+
+    // Attach event listener to form submission
+    const form = document.getElementById('booking_form');
+    form.addEventListener('submit', function(event) {
+      if (!reminderDateInput.value) {
+        event.preventDefault(); // Prevent form submission
+        alert('Please select a reminder date.'); // Display an alert to the user
+      }
+    });
+
+    // Update reminder options initially
+    updateReminderOptions();
+  });
+
+
+  </script>
+
+</body>
+</html>

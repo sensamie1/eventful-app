@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification Failed</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        margin-top: 100px;
+        margin-bottom: 300px;
+      }
+      
+      a {
+        text-decoration: none;
+        color: #3f0e38;
+      }
+
+      /* Media Query for Mobile Devices */
+      @media only screen and (max-width: 600px) {
+        .container {
+          margin-top: 50px;
+        }
+
+        h2 {
+          font-size: 20px;
+        }
+
+        p {
+          font-size: 14px;
+          margin-bottom: 15px;
+        }
+
+        }
+    </style>
+</head>
+<body>
+
+  <header>
+    {{> users-header}}
+  </header>
+
+  <div class="container">
+    <h2>Email Verification Failed</h2>
+    <p>Invalid or expired verification link.</p>
+    <p>Please request a new verification link with your email <strong><a href="http://{{env.HOST}}:{{env.PORT}}/views/users/resend-verification-email">here</a></strong>.</p>
+  </div>
+
+  <footer>
+    {{> users-footer}}
+  </footer>
+
+</body>
+</html>

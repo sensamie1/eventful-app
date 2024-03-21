@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      margin-bottom: 60px;
+    }
+
+    .page-content {
+      margin-top: 30px;
+    }
+
+    .page-content h2 {
+      color: #333;
+    }
+
+    .page-content form {
+      max-width: 300px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-content label {
+      display: block;
+      text-align: left;
+      margin: 10px 0 5px;
+    }
+
+    .page-content input[type="email"],
+    .page-content input[type="password"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .page-content input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #3f0e38;
+      border-radius: 5px;
+      background-color: #fff;
+      color: #3f0e38;
+      cursor: pointer;
+    }
+
+    .page-content a {
+      text-decoration: none;
+      color: #333;
+      margin-left: 10px;
+    }
+
+    .page-content input[type="submit"]:hover {
+      background-color: #6a4565;
+      color: #fff;
+    }
+
+    @media screen and (max-width: 768px) {
+      .page-content form {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    {{> creators-header }}
+  </header>
+
+  <div class="page-content">
+    <h2>Creator Login</h2>
+
+    {{#if messages.error}}
+      <div class="alert alert-danger text-center">
+        <ul>
+          {{#each messages.error}}
+            <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
+    {{#if messages.success }}
+      <div class="alert alert-success text-center">
+        <li>{{messages.success}}</li>
+    </div>
+    {{else}}
+      <form action="/views/creators/login" method="post">
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" value="" placeholder="Email" required><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" value="" placeholder="Password" required><br><br>
+        <input type="submit" class="btn" value="Login" style="font-weight: bolder;"><br><br>
+        <p><a href="/views/creators/forgot-password" style="color: #3f0e38; ">Forgot your password?</a></p><br>
+        <strong>
+          <p>Don't have an account? <a href="/views/creators/signup" style="color: #3f0e38;" >Signup</a></p>
+        </strong>
+      </form>
+    {{/if}}
+  </div>
+
+  <footer>
+    {{> creators-footer}}
+  </footer>
+
+</body>
+</html>

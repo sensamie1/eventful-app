@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Footer</title>
+  <style>
+    body {
+      margin-bottom: 60px;
+    }
+    footer {
+      background-color: none;
+      color: black;
+      text-align: center;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+
+    @media only screen and (max-width: 600px) {
+      footer {
+        position: relative;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <footer>
+    <p>© 2024 Sen Samie. All rights reserved. | <a href="/views/users/terms" style="color: #3f0e38; text-decoration: none;" target="_blank">Terms of Use</a></p>
+    <p id="currentDateTime"></p>
+  </footer>
+
+  <script>
+    function updateDateTime() {
+      const currentDate = new Date();
+      const formattedDateTime = currentDate.toLocaleString();
+      document.getElementById("currentDateTime").innerHTML = formattedDateTime;
+    }
+
+    updateDateTime();
+  </script>
+</body>
+</html>

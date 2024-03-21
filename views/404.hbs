@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 Page Not Found</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f9f9f9;
+  }
+
+  .container {
+    width: 50%;
+    margin: 100px auto;
+  }
+
+  h1 {
+    color: #333;
+  }
+
+  p {
+    color: #666;
+    font-size: 18px;
+    line-height: 1.6;
+    margin-top: 20px;
+  }
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 30px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  background-color: #3f0e38;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+  @media screen and (max-width: 600px) {
+    .container {
+      width: 80%;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>404 - Page Not Found</h1>
+    <p>Sorry, the page you are looking for does not exist.</p>
+    <a class="btn" onclick="goBack()">Go Back</a>
+  </div>
+  <script>
+      function goBack() {
+        window.history.back();
+      }
+    </script>
+</body>
+</html>
