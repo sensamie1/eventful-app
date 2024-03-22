@@ -33,7 +33,9 @@ export class UsersService {
       const token = jwt.sign({ email: savedUser.email, _id: savedUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
   
       // Construct the verification link
-      const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/users/verify-email?token=${token}`;
+      const verificationLink = `https://eventful-app.onrender.com/users/verify-email?token=${token}`;
+
+      // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/users/verify-email?token=${token}`;
   
       // Send verification email
       await sendVerificationEmail(savedUser.email, verificationLink);
@@ -68,7 +70,9 @@ export class UsersService {
       const token = jwt.sign({ email: savedUser.email, _id: savedUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
   
       // Construct the verification link
-      const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/users/verify-email?token=${token}`;
+      const verificationLink = `https://eventful-app.onrender.com/views/users/verify-email?token=${token}`;
+
+      // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/users/verify-email?token=${token}`;
   
       // Send verification email
       await sendVerificationEmail(savedUser.email, verificationLink);
@@ -133,7 +137,9 @@ export class UsersService {
       const token = jwt.sign({ email: user.email, _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
       // Construct the verification link
-      const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/users/verify-email?token=${token}`;
+      const verificationLink = `https://eventful-app.onrender.com/users/verify-email?token=${token}`;
+
+      // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/users/verify-email?token=${token}`;
 
       // Send verification email
       await sendVerificationEmail(user.email, verificationLink);
@@ -163,7 +169,9 @@ export class UsersService {
       const token = jwt.sign({ email: user.email, _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
       // Construct the verification link
-      const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/users/verify-email?token=${token}`;
+      const verificationLink = `https://eventful-app.onrender.com/views/users/verify-email?token=${token}`;
+
+      // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/users/verify-email?token=${token}`;
 
       // Send verification email
       await sendVerificationEmail(user.email, verificationLink);
@@ -220,7 +228,9 @@ export class UsersService {
       }
 
       if (!user.isVerified) {
-        const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/users/resend-verification-email`;
+        const verificationLink = `https://eventful-app.onrender.com/users/resend-verification-email`;
+
+        // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/users/resend-verification-email`;
         throw new HttpException({
           message: `Email not verified. Check your Email for verification link or request a new one here - ${verificationLink}`,
           success: false
@@ -265,7 +275,9 @@ export class UsersService {
       }
 
       if (!user.isVerified) {
-        const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/users/resend-verification-email`;
+        const verificationLink = `https://eventful-app.onrender.com/views/users/resend-verification-email`;
+
+        // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/users/resend-verification-email`;
         throw new HttpException({
           message: `Email not verified. Check your Email for verification link or request a new one here - ${verificationLink}`,
           success: false
@@ -309,7 +321,9 @@ export class UsersService {
   
       const token = await jwt.sign({ email: user.email, _id: user._id}, process.env.JWT_SECRET, { expiresIn: '5m' });
   
-      const resetLink = `http://${process.env.HOST}:${process.env.PORT}/views/users/reset-password?token=${token}`;
+      const resetLink = `https://eventful-app.onrender.com/views/users/reset-password?token=${token}`;
+
+      // const resetLink = `http://${process.env.HOST}:${process.env.PORT}/views/users/reset-password?token=${token}`;
       
       // Send password reset email
       await sendPasswordResetEmail(user.email, resetLink);

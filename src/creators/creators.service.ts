@@ -34,7 +34,9 @@ export class CreatorsService {
       const token = jwt.sign({ email: savedCreator.email, _id: savedCreator._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
   
       // Construct the verification link
-      const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/creators/verify-email?token=${token}`;
+      const verificationLink = `https://eventful-app.onrender.com/creators/verify-email?token=${token}`;
+
+      // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/creators/verify-email?token=${token}`;
   
       // Send verification email
       await sendVerificationEmail(savedCreator.email, verificationLink);
@@ -70,7 +72,9 @@ export class CreatorsService {
       const token = jwt.sign({ email: savedCreator.email, _id: savedCreator._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
   
       // Construct the verification link
-      const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/creators/verify-email?token=${token}`;
+      const verificationLink = `https://eventful-app.onrender.com/views/creators/verify-email?token=${token}`;
+
+      // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/creators/verify-email?token=${token}`;
   
       // Send verification email
       await sendVerificationEmail(savedCreator.email, verificationLink);
@@ -134,7 +138,9 @@ export class CreatorsService {
     const token = jwt.sign({ email: creator.email, _id: creator._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     // Construct the verification link
-    const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/creators/verify-email?token=${token}`;
+    const verificationLink = `https://eventful-app.onrender.com/creators/verify-email?token=${token}`;
+
+    // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/creators/verify-email?token=${token}`;
 
     // Send verification email
     await sendVerificationEmail(creator.email, verificationLink);
@@ -161,7 +167,9 @@ export class CreatorsService {
       const token = jwt.sign({ email: creator.email, _id: creator._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
       // Construct the verification link
-      const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/creators/verify-email?token=${token}`;
+      const verificationLink = `https://eventful-app.onrender.com/views/creators/verify-email?token=${token}`;
+
+      // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/creators/verify-email?token=${token}`;
 
       // Send verification email
       await sendVerificationEmail(creator.email, verificationLink);
@@ -208,7 +216,9 @@ export class CreatorsService {
     }
 
     if (!creator.isVerified) {
-      const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/creators/resend-verification-email`;
+      const verificationLink = `https://eventful-app.onrender.com/creators/resend-verification-email`;
+
+      // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/creators/resend-verification-email`;
       throw new HttpException({
         message: `Email not verified. Check your Email for verification link or request a new one here - ${verificationLink}`,
         success: false
@@ -250,7 +260,9 @@ export class CreatorsService {
       }
 
       if (!creator.isVerified) {
-        const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/creators/resend-verification-email`;
+        const verificationLink = `https://eventful-app.onrender.com/views/creators/resend-verification-email`;
+
+        // const verificationLink = `http://${process.env.HOST}:${process.env.PORT}/views/creators/resend-verification-email`;
         throw new HttpException({
           message: `Email not verified. Check your Email for verification link or request a new one here - ${verificationLink}`,
           success: false
@@ -293,7 +305,9 @@ export class CreatorsService {
   
       const token = await jwt.sign({ email: creator.email, _id: creator._id}, process.env.JWT_SECRET, { expiresIn: '5m' });
   
-      const resetLink = `http://${process.env.HOST}:${process.env.PORT}/views/creators/reset-password?token=${token}`;
+      const resetLink = `https://eventful-app.onrender.com/views/creators/reset-password?token=${token}`;
+
+      // const resetLink = `http://${process.env.HOST}:${process.env.PORT}/views/creators/reset-password?token=${token}`;
       
       // Send password reset email
       await sendPasswordResetEmail(creator.email, resetLink);

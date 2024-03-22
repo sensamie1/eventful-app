@@ -496,11 +496,16 @@ export class EventsService {
         await event.save();
 
         const qrCodeData1 = JSON.stringify(
-          `${process.env.HOST}:${process.env.PORT}/users/events/${event._id}/${userEmail}/details`,
+          `https://eventful-app.onrender.com/users/events/${event._id}/${userEmail}/details`,
         );
+
+        // `${process.env.HOST}:${process.env.PORT}/users/events/${event._id}/${userEmail}/details`,
+
         const qrCodeData2 = JSON.stringify(
-          `${process.env.HOST}:${process.env.PORT}/creators/events/${event._id}/${userEmail}/admit`,
+          `https://eventful-app.onrender.com/creators/events/${event._id}/${userEmail}/admit`,
         );
+        
+        //  `${process.env.HOST}:${process.env.PORT}/creators/events/${event._id}/${userEmail}/admit`,
 
         // Upload the QR code to Cloudinary
         const qrCodeUrl1 = await this.cloudinaryService.uploadQrCode(qrCodeData1, 'qr_codes');
@@ -567,13 +572,18 @@ export class EventsService {
         await event.save();
 
         const qrCodeData1 = JSON.stringify(
-          `${process.env.HOST}:${process.env.PORT}/views/users/events/${event._id}/${userEmail}/details`,
+          `https://eventful-app.onrender.com/views/users/events/${event._id}/${userEmail}/details`,
         );
-        const qrCodeData2 = JSON.stringify(
-          `${process.env.HOST}:${process.env.PORT}/views/creators/events/${event._id}/${userEmail}/admit`,
-        );
+      
+        //`${process.env.HOST}:${process.env.PORT}/views/users/events/${event._id}/${userEmail}/details`,
 
-        // Upload the QR code to Cloudinary
+        const qrCodeData2 = JSON.stringify(
+          `https://eventful-app.onrender.com/views/creators/events/${event._id}/${userEmail}/admit`,
+        );
+          
+        //`${process.env.HOST}:${process.env.PORT}/views/creators/events/${event._id}/${userEmail}/admit`,
+        
+          // Upload the QR code to Cloudinary
         const qrCodeUrl1 = await this.cloudinaryService.uploadQrCode(qrCodeData1, 'qr_codes');
         const qrCodeUrl2 = await this.cloudinaryService.uploadQrCode(qrCodeData2, 'qr_codes');
 
@@ -626,7 +636,9 @@ export class EventsService {
       }
 
       // Construct the URL for sharing the event on social media
-      const eventUrl = `${process.env.HOST}:${process.env.PORT}/events/${event._id}`;
+      const eventUrl = `https://eventful-app.onrender.com/events/${event._id}`;
+
+      // const eventUrl = `${process.env.HOST}:${process.env.PORT}/events/${event._id}`;
       return {
         message: 'Event url generated successfully. Copy and share.',
         url: eventUrl,
