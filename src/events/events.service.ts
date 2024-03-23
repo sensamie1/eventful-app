@@ -578,7 +578,7 @@ export class EventsService {
         //`${process.env.HOST}:${process.env.PORT}/views/users/events/${event._id}/${userEmail}/details`,
 
         const qrCodeData2 = JSON.stringify(
-          `https://eventful-app.onrender.com/views/creators/events/${event._id}/${userEmail}/admit`,
+          `https://eventful-app.onrender.com/views/creators/my-event/${event._id}/${userEmail}/admit`,
         );
           
         //`${process.env.HOST}:${process.env.PORT}/views/creators/events/${event._id}/${userEmail}/admit`,
