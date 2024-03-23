@@ -14,11 +14,11 @@ export class CreatorJwtAuthGuard implements NestMiddleware {
         // console.log(decodedValue);
         next();
       } catch (error) {
-        res.redirect('login')
+        res.redirect('/views/cretors/login')
         throw new UnauthorizedException('Invalid or expired token');
       }
     } else {
-      res.redirect('login')
+      res.redirect('/views/creators/login')
       throw new UnauthorizedException('Token not found');
     }
   }
