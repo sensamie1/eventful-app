@@ -629,15 +629,15 @@ export class AppController {
       }
       const response = await this.eventsService.ViewsFindAll(page, limit, name, type);
       // console.log(response.events);
-      return res.render('users-events', {events: response.events, current: page, pages: response.pages, messages: req.flash() });
+      return res.render('creators-events', {events: response.events, current: page, pages: response.pages, messages: req.flash() });
     } catch (error) {
       if (error instanceof NotFoundException) {
         req.flash('error', error.message);
-        return res.render('users-events');
+        return res.render('creators-events');
       } else {
         console.error('Error retrieving events:', error);
         req.flash('error', error.message);
-        return res.render('users-events');
+        return res.render('creators-events');
       }
     }
   }
@@ -758,7 +758,7 @@ export class AppController {
         }
       } else {
         req.flash('error', 'Creation Error.');
-        return res.redirect('/views/creators/404');
+        return res.render('404', {creator: res.locals.creator || null});
       }
     }
   }
@@ -908,7 +908,15 @@ export class AppController {
       const token = req.cookies.creator_jwt; // Access JWT token from cookie
       const response = await this.eventsService.findAllCreatorEventsViews(token, page, limit, name, type);
       // console.log(response.events);
-      return res.render('creator-my-events', {events: response.events, current: page, pages: response.pages, creator: res.locals.creator , messages: req.flash() });
+      return res.render('creator-my-events', {
+        events: response.events, 
+        attendeesGrandTotal: response.attendeesGrandTotal, 
+        admittedGrandTotal: response.admittedGrandTotal,
+        current: page, 
+        pages: response.pages, 
+        creator: res.locals.creator , 
+        messages: req.flash() 
+      });
     } catch (error) {
       if (error instanceof NotFoundException) {
         req.flash('error', error.message);
@@ -930,9 +938,14 @@ export class AppController {
 
   ) {
     try {
-      const response = await this.eventsService.findOneViews(id);
+      const response = await this.eventsService.findOneCreatorEventViews(id);
       // console.log(response.event);
-      return res.render('creator-mine', {event: response.event, creator: res.locals.creator , messages: req.flash() });
+      return res.render('creator-mine', {
+        event: response.event,
+        attendeesTotal: response.attendeesTotal,
+        admittedTotal: response.admittedTotal,
+        creator: res.locals.creator, 
+        messages: req.flash() });
     } catch (error) {
       if (error instanceof NotFoundException) {
         req.flash('error', error.message);
@@ -1000,7 +1013,7 @@ export class AppController {
         }
       } else {
         req.flash('error', 'Booking Error.');
-        return res.redirect('/views/creators/404');
+        return res.render('404', {user: res.locals.user || null})
       }
     }
   }
@@ -1032,7 +1045,7 @@ export class AppController {
         }
       } else {
         req.flash('error', 'Creation Error.');
-        return res.redirect('/views/creators/404');
+        return res.render('404', {creator: res.locals.creator || null});
       }
     }
   }

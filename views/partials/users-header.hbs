@@ -158,17 +158,17 @@
 
   {{#if user}}
   <div class="search-form">
-    <form id="searchForm" action="/views/users/auth-search" method="get">
+    <form id="searchForm" action="/views/users/users-events" method="get">
       <label for="search" class="search-label"></label>
-      <input type="text" id="search" name="query" placeholder="Search for events..." class="search-input" required>
+      <input type="text" id="search" name="name" placeholder="Search for events..." class="search-input" required>
       <input type="submit" value="Search" class="search-submit">
     </form>
   </div>
   {{else}}
     <div class="search-form">
-      <form id="searchForm" action="/views/users/search" method="get">
+      <form id="searchForm" action="/views/users/events" method="get">
         <label for="search" class="search-label"></label>
-        <input type="text" id="search" name="query" placeholder="Search for events..." class="search-input" required>
+        <input type="text" id="search" name="name" placeholder="Search for events..." class="search-input" required>
         <input type="submit" value="Search" class="search-submit">
       </form>
     </div>

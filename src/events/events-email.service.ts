@@ -1,6 +1,6 @@
 import * as nodemailer from 'nodemailer';
 
-export async function sendTicketEmail(email: string, qrcodeLink1: string, qrcodeLink2: string, event_name: string, event_date: Date, location: string): Promise<void> {
+export async function sendTicketEmail(email: string, qrcodeLink: string, event_name: string, event_date: Date, location: string): Promise<void> {
   const transporter = nodemailer.createTransport({
     service: process.env.SERVICE,
     auth: {
@@ -52,11 +52,10 @@ export async function sendTicketEmail(email: string, qrcodeLink1: string, qrcode
         <p><b>Event:</b> ${event_name}</p>
         <p><b>Date:</b> ${event_date}</p>
         <p><b>Location:</b> ${location}</p>
-        <p><b>Scan the QR Code below for more details of the event.</b></p>
-        <img src="${qrcodeLink1}" alt="QR Code" class="qrcode-image">
+
         <p><b>The QR Code below is your access to the event.</b></p>
         <p><b>Keep this safe.</b></p>
-        <img src="${qrcodeLink2}" alt="QR Code" class="qrcode-image">
+        <img src="${qrcodeLink}" alt="QR Code" class="qrcode-image">
       </body>
     </html>
   `

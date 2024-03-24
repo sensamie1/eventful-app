@@ -207,7 +207,8 @@ export class EventsService {
       }
 
       // Calculate total pages
-      const totalPages = Math.ceil(events.length / limit);
+      const totalEventsCount = await this.eventModel.countDocuments(query);
+      const totalPages = Math.ceil(totalEventsCount / limit);
 
       return {
         message: 'Events retrieved successfully.',
@@ -257,8 +258,9 @@ export class EventsService {
       }
 
       // Calculate total pages
-      const totalPages = Math.ceil(events.length / limit);
-
+      const totalEventsCount = await this.eventModel.countDocuments(query);
+      const totalPages = Math.ceil(totalEventsCount / limit);
+      
       return {
         message: 'Events retrieved successfully.',
         totalPages: totalPages,
@@ -276,8 +278,6 @@ export class EventsService {
       
     }
   }
-
-
 
 
   async findOne(id: string) {
@@ -322,6 +322,7 @@ export class EventsService {
       if (event.event_date < currentDate) {
         throw new GoneException('This event has already passed.');
       }
+
       return {
         message: 'Event retrieved successfully.',
         event,
@@ -337,8 +338,49 @@ export class EventsService {
     }
     
   }
+  async findOneCreatorEventViews(id: string) {
+    try {
+      const event = await this.eventModel.findById(id)
+        .lean()
+        .exec();
 
-  async findAllCreatorEvents(token: string, page: number = 1, limit: number = 5, name?: string, type?: string) {
+      if (!event) {
+        throw new NotFoundException('Event not found or canceled by creator.');
+      }
+
+      let attendeesTotal = 0
+      let admittedTotal = 0
+
+      // Calculate the count of the attendees array for the current object
+      let attendeesCount = event.attendees.length;
+
+      attendeesTotal += attendeesCount
+
+      let admittedCount = event.admitted.length;
+
+      admittedTotal += admittedCount
+
+      console.log("Attendees Total:", attendeesTotal, "Admitted Total:", admittedTotal); // Output the total
+
+      return {
+        message: 'Event retrieved successfully.',
+        event,
+        attendeesTotal,
+        admittedTotal,
+        statusCode: HttpStatus.OK
+      }
+    } catch (error) {
+      if (error.name === 'NotFoundException') {
+        throw new NotFoundException(error);
+      } else {
+        console.error('Error retrieving event:', error);
+        throw new Error('Error retrieving event.');
+      }
+    }
+    
+  }
+
+  async findAllCreatorEvents(token: string, page: number = 1, limit: number = 10, name?: string, type?: string) {
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
 
@@ -376,15 +418,34 @@ export class EventsService {
         throw new NotFoundException('There are no events associated with this creator.');
       }
 
-        // Calculate total pages
-        const totalPages = Math.ceil(events.length / limit);
+      let attendeesGrandTotal = 0
+      let admittedGrandTotal = 0
+      // Iterate over the array of objects
+      events.forEach(event => {
+        // Calculate the count of the attendees array for the current object
+        let attendeesCount = event.attendees.length;
 
-        return {
-          message: 'Events associated with the creator retrieved successfully.',
-          pages: `${page} of ${totalPages}`,
-          events: events,
-          statusCode: HttpStatus.OK
-        }
+        attendeesGrandTotal += attendeesCount
+
+        let admittedCount = event.admitted.length;
+
+        admittedGrandTotal += admittedCount
+
+      });
+      console.log("Attendees Grand Total:", attendeesGrandTotal, "Admitted Grand Total:", admittedGrandTotal); // Output the grand total
+
+      // Calculate total pages
+      const totalEventsCount = await this.eventModel.countDocuments(query);
+      const totalPages = Math.ceil(totalEventsCount / limit);
+
+      return {
+        message: 'Events associated with the creator retrieved successfully.',
+        pages: `${page} of ${totalPages}`,
+        events: events,
+        attendeesGrandTotal: attendeesGrandTotal,
+        admittedGrandTotal: admittedGrandTotal,
+        statusCode: HttpStatus.OK
+      }
     } catch (error) {
       if (error.name === 'NotFoundException') {
         throw new NotFoundException(error);
@@ -397,7 +458,7 @@ export class EventsService {
     }
   }
 
-  async findAllCreatorEventsViews(token: string, page: number = 1, limit: number = 5, name?: string, type?: string) {
+  async findAllCreatorEventsViews(token: string, page: number = 1, limit: number = 10, name?: string, type?: string) {
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
 
@@ -434,6 +495,22 @@ export class EventsService {
       if (!events || events.length === 0) {
         throw new NotFoundException('There are no events associated with this creator.');
       }
+      
+      let attendeesGrandTotal = 0
+      let admittedGrandTotal = 0
+      // Iterate over the array of objects
+      events.forEach(event => {
+        // Calculate the count of the attendees array for the current object
+        let attendeesCount = event.attendees.length;
+
+        attendeesGrandTotal += attendeesCount
+
+        let admittedCount = event.admitted.length;
+
+        admittedGrandTotal += admittedCount
+
+      });
+      console.log("Attendees Grand Total:", attendeesGrandTotal, "Admitted Grand Total:", admittedGrandTotal); // Output the grand total
 
       // Calculate total pages
       const totalEventsCount = await this.eventModel.countDocuments(query);
@@ -444,6 +521,8 @@ export class EventsService {
         message: 'Events associated with the creator retrieved successfully.',
         pages: `${page} of ${totalPages}`,
         events: events,
+        attendeesGrandTotal: attendeesGrandTotal,
+        admittedGrandTotal: admittedGrandTotal,
         statusCode: HttpStatus.OK
       }
     } catch (error) {
@@ -495,35 +574,27 @@ export class EventsService {
         event.attendees.push({ user_email: userEmail, user_reminder_date: user_reminder_date });
         await event.save();
 
-        const qrCodeData1 = JSON.stringify(
-          `https://eventful-app.onrender.com/users/events/${event._id}/${userEmail}/details`,
-        );
 
-        // `${process.env.HOST}:${process.env.PORT}/users/events/${event._id}/${userEmail}/details`,
-
-        const qrCodeData2 = JSON.stringify(
+        const qrCodeData = JSON.stringify(
           `https://eventful-app.onrender.com/creators/events/${event._id}/${userEmail}/admit`,
         );
         
         //  `${process.env.HOST}:${process.env.PORT}/creators/events/${event._id}/${userEmail}/admit`,
 
         // Upload the QR code to Cloudinary
-        const qrCodeUrl1 = await this.cloudinaryService.uploadQrCode(qrCodeData1, 'qr_codes');
-        const qrCodeUrl2 = await this.cloudinaryService.uploadQrCode(qrCodeData2, 'qr_codes');
+        const qrCodeUrl = await this.cloudinaryService.uploadQrCode(qrCodeData, 'qr_codes');
 
         // Send email with the Cloudinary URL for the QR code
         await sendTicketEmail(
-          userEmail, 
-          qrCodeUrl1, 
-          qrCodeUrl2, 
+          userEmail,  
+          qrCodeUrl, 
           event.event_name, 
           event.event_date, 
           event.location
         );
         return {
           message: 'Ticket booked successfully. Check your email for QR Codes.',
-          detailsQrCodeUrl: qrCodeUrl1,
-          accessQrCodeUrl: qrCodeUrl2,
+          accessQrCodeUrl: qrCodeUrl,
           statusCode: HttpStatus.OK
         }
       } catch (error) {
@@ -535,6 +606,7 @@ export class EventsService {
         }
       }
   }
+
   async addUserToAttendeesViews(
     token: string,
     eventId: string,
@@ -571,35 +643,26 @@ export class EventsService {
         event.attendees.push({ user_email: userEmail, user_reminder_date: user_reminder_date });
         await event.save();
 
-        const qrCodeData1 = JSON.stringify(
-          `https://eventful-app.onrender.com/views/users/events/${event._id}/${userEmail}/details`,
-        );
-      
-        //`${process.env.HOST}:${process.env.PORT}/views/users/events/${event._id}/${userEmail}/details`,
-
-        const qrCodeData2 = JSON.stringify(
+        const qrCodeData = JSON.stringify(
           `https://eventful-app.onrender.com/views/creators/my-event/${event._id}/${userEmail}/admit`,
         );
           
         //`${process.env.HOST}:${process.env.PORT}/views/creators/events/${event._id}/${userEmail}/admit`,
         
           // Upload the QR code to Cloudinary
-        const qrCodeUrl1 = await this.cloudinaryService.uploadQrCode(qrCodeData1, 'qr_codes');
-        const qrCodeUrl2 = await this.cloudinaryService.uploadQrCode(qrCodeData2, 'qr_codes');
+        const qrCodeUrl = await this.cloudinaryService.uploadQrCode(qrCodeData, 'qr_codes');
 
         // Send email with the Cloudinary URL for the QR code
         await sendTicketEmail(
           userEmail, 
-          qrCodeUrl1, 
-          qrCodeUrl2, 
+          qrCodeUrl, 
           event.event_name, 
           event.event_date, 
           event.location
         );
         return {
           message: 'Ticket booked successfully. Check your email for QR Codes.',
-          detailsQrCodeUrl: qrCodeUrl1,
-          accessQrCodeUrl: qrCodeUrl2,
+          accessQrCodeUrl: qrCodeUrl,
           statusCode: HttpStatus.OK
         }
       } catch (error) {
@@ -654,7 +717,7 @@ export class EventsService {
     }
   }
 
-  async getEventAttendees(token: string, eventId: string, page: number = 1, limit: number = 5,) {
+  async getEventAttendees(token: string, eventId: string, page: number = 1, limit: number = 10,) {
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
 
@@ -717,7 +780,7 @@ export class EventsService {
     }
   }
 
-  async getAllEventAttendees(token: string, page: number = 1, limit: number = 5,) {
+  async getAllEventAttendees(token: string, page: number = 1, limit: number = 10,) {
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
   
@@ -775,7 +838,7 @@ export class EventsService {
     }
   }
   
-  async findEventsByAttendeeEmail(token: string, page: number = 1, limit: number = 5,) {
+  async findEventsByAttendeeEmail(token: string, page: number = 1, limit: number = 10,) {
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
   
@@ -927,7 +990,7 @@ export class EventsService {
     }
   }
 
-  async getEventAdmitted(token: string, eventId: string, page: number = 1, limit: number = 5,) {
+  async getEventAdmitted(token: string, eventId: string, page: number = 1, limit: number = 10,) {
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
 
@@ -990,7 +1053,7 @@ export class EventsService {
     }
   }
 
-  async getAllEventAdmitted(token: string, page: number = 1, limit: number = 5,) {
+  async getAllEventAdmitted(token: string, page: number = 1, limit: number = 10,) {
     try {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
   

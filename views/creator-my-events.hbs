@@ -11,7 +11,7 @@
       font-family: Arial, sans-serif;
     }
 
-    h2 {
+    h2, h5 {
       text-align: center;
     }
 
@@ -169,6 +169,7 @@
     </div>
   {{else}}
     <h2>My Events</h2>
+    <h5>All time tickets - Booked: {{attendeesGrandTotal}}, Scanned: {{admittedGrandTotal}}</h5>
     
     <div class="event-container">
       {{#each events as |event|}}

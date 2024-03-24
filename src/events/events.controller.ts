@@ -33,7 +33,7 @@ export class EventsController {
   @Get('/events')
   findAll(
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5,
+    @Query('limit') limit: number = 10,
     @Query('name') name?: string,
     @Query('type') type?: string
   ) {
@@ -49,7 +49,7 @@ export class EventsController {
   @Get('creators/events/get')
   findAllForCreators(
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5,
+    @Query('limit') limit: number = 10,
     @Query('name') name?: string,
     @Query('type') type?: string
   ) {
@@ -59,7 +59,7 @@ export class EventsController {
   @Get('users/events/get')
   findAllForUsers(
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5,
+    @Query('limit') limit: number = 10,
     @Query('name') name?: string,
     @Query('type') type?: string
   ) {
@@ -81,7 +81,7 @@ export class EventsController {
   findAllCreatorEvents(
     @Request() req, 
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5,
+    @Query('limit') limit: number = 10,
     @Query('name') name?: string,
     @Query('type') type?: string
   ) {
@@ -132,7 +132,7 @@ export class EventsController {
     @Param('eventId') eventId: string, 
     @Request() req,
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5,
+    @Query('limit') limit: number = 10,
     ) {
     // Extract the bearer token from the request headers
     const token = req.headers.authorization.replace('Bearer ', '');
@@ -144,7 +144,7 @@ export class EventsController {
   async getAllEventAttendees(
     @Request() req,
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5,
+    @Query('limit') limit: number = 10,
   ) {
     // Extract the bearer token from the request headers
     const token = req.headers.authorization.replace('Bearer ', '');
@@ -182,7 +182,7 @@ export class EventsController {
     @Param('eventId') eventId: string, 
     @Request() req,
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5,
+    @Query('limit') limit: number = 10,
     ) {
     // Extract the bearer token from the request headers
     const token = req.headers.authorization.replace('Bearer ', '');
