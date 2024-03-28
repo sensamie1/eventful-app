@@ -63,7 +63,7 @@
       align-items: center;
     }
 
-    .share-btn {
+    .save-btn {
       background-color: #3f0e38;
       color: white;
       border: none;
@@ -72,21 +72,8 @@
       cursor: pointer;
     }
 
-    .delete-btn {
-      background-color: #940303;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .share-btn:hover {
+    .save-btn:hover {
       background-color: #6a4565;
-    }
-
-    .delete-btn:hover {
-      background-color: #6d3f3f;
     }
 
     .disabled {
@@ -181,22 +168,15 @@
         <div class="event-title">Event Title: {{event.event_name}}</div>
         <div class="event-description"><b>Description:</b> {{event.description}}</div>
         <div class="event-location"><b>Location:</b> {{event.location}}</div>
-        <div class="event-sponsors"><b>Sponsors:</b> {{event.sponsors}}</div>
-        <div class="event-meta">
-          <b>Date: <div class="event-date dateElement">{{event.event_date}}</div></b>
-        </div>
-        <button class="share-btn" onclick="shareEvent()">Share <i class="fa fa-share-alt"></i></button>
+        <form action="/views/creators/my-event/{{event._id}}/update" method="POST">
+          <input type="hidden" name="_method" value="PATCH"> <!-- Override method to PATCH -->
+          <div class="event-sponsors"><b>Sponsors:</b> <textarea name="sponsors" id="sponsors">{{event.sponsors}}</textarea></div>
+          <div class="event-meta">
+            <b>Date: <div class="event-date dateElement">{{event.event_date}}</div></b>
+          </div>
+          <button type="submit" class="save-btn">Save Changes</button>
+        </form>
 
-        <i>
-          <b>
-            <p>Remember to delete only event</p><p>with past date or no attendee!</p>
-          </b>
-        </i>
-        <div class="event-actions">
-          <a href="/views/creators/my-event/{{event._id}}/delete">
-            <button class="delete-btn">Delete</button>
-          </a>
-        </div>
       </div>
     </div>
 
@@ -208,28 +188,7 @@
   </footer>
 
   <script>
-    // Function to share event using Web Share API
-    function shareEvent() {
-      const eventUrl = `https://eventful-app.onrender.com/views/users/events/{{event._id}}`;
-      const events = `https://eventful-app.onrender.com/views/users/events`;
-      
-      if (navigator.share) {
-        // Web Share API is supported
-        navigator.share({
-          title: `{{event.name}}`,
-          description: `{{event.description}}`,
-          text: `Sign up to check out this event!\n\nTo see other events click - ${events}`,
-          url: eventUrl
-        })
-        .then(() => console.log('Shared successfully'))
-        .catch((error) => console.error('Error sharing:', error));
-      } else {
-        // Fallback for devices that do not support Web Share API
-        const shareText = `Sign up to check out this event: ${eventUrl}\n\nTo see other events click - ${events}`;
-        // Display event URL for manual sharing
-        alert(`Web Share API is not supported on this device. You can manually share the event URL:\n\n${shareText}`);
-      }
-    }
+    
   </script>
 
 </body>

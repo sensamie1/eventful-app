@@ -60,7 +60,9 @@ export class AppModule implements NestModule {
       'views/creators/my-events',
       'views/creators/my-event/:id',
       'views/creators/my-event/:id/admit',
-      'views/creators/my-event/:id/:userEmail/admit'
+      'views/creators/my-event/:id/:userEmail/admit',
+      'views/creators/my-event/:id/update',
+      'views/creators/my-event/:id/delete'
     );
   }
 }

@@ -197,6 +197,7 @@ export class EventsService {
       
       const events = await this.eventModel
         .find(query)
+        .sort({ event_date: 1 }) // Sort by event_date in descending order (newest first)
         .skip(skip)
         .limit(limit)
         .lean()
@@ -248,6 +249,7 @@ export class EventsService {
       
       const events = await this.eventModel
         .find(query)
+        .sort({ event_date: 1 }) // Sort by event_date in descending order (newest first)
         .select('_id image_url event_name event_type description location sponsors event_date')
         .skip(skip)
         .limit(limit)
@@ -409,6 +411,7 @@ export class EventsService {
 
       const events = await this.eventModel
         .find(query)
+        .sort({ event_date: 1 }) // Sort by event_date in descending order (newest first)
         .select('_id image_url event_name event_type description location sponsors event_date')
         .skip(skip)
         .limit(limit)
@@ -487,6 +490,7 @@ export class EventsService {
 
       const events = await this.eventModel
         .find(query)
+        .sort({ event_date: 1 }) // Sort by event_date in descending order (newest first)
         .skip(skip)
         .limit(limit)
         .lean()
@@ -849,6 +853,7 @@ export class EventsService {
       // Find all events
       const events = await this.eventModel
         .find()
+        .sort({ event_date: 1 }) // Sort by event_date in descending order (newest first)
         .skip(skip)
         .limit(limit)
         .lean()
@@ -1167,6 +1172,66 @@ export class EventsService {
       }
     }
   }
+
+  async updateViews(token: string, id: string, updateEventDto: any) {
+    try {
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+      console.log(decodedToken);
+
+      const creatorId = decodedToken._id;
+
+      // Check if the Id exists in the Creator collection
+      const creator = await this.creatorModel.findById(creatorId);
+      if (!creator) {
+        throw new UnauthorizedException('You are unauthorized.');
+      }
+
+      const existingEvent = await this.eventModel.findById(id);
+      if (!existingEvent) {
+        throw new NotFoundException('Event not found');
+      }
+
+      const creatorObjectId = mongoose.Types.ObjectId.createFromHexString(creatorId);
+
+      if (!(existingEvent.creator as mongoose.Types.ObjectId).equals(creatorObjectId)) {
+        throw new UnauthorizedException('You are not the creator of this event. Hence you are unauthorized.');
+      }
+
+      if (updateEventDto.sponsors) {
+        // Convert comma-separated sponsors string to array of strings
+        const sponsorsArray = updateEventDto.sponsors.split(',').map((sponsor: string) => sponsor.trim());
+
+        // Create a Set from the existing sponsors array to ensure uniqueness
+        const existingSponsorsSet = new Set(existingEvent.sponsors);
+
+        // Iterate over the new sponsors array and add only unique strings to the existing sponsors Set
+        sponsorsArray.forEach(sponsor => {
+          existingSponsorsSet.add(sponsor);
+        });
+
+        // Convert the Set back to an array and assign it to the existing event sponsors
+        existingEvent.sponsors = Array.from(existingSponsorsSet);
+      }
+
+      await existingEvent.save();
+
+      return {
+        message: 'Event updated successfully',
+        event: existingEvent,
+        statusCode: HttpStatus.CREATED
+      }
+  } catch (error) {
+      if (error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError') {
+        throw new UnauthorizedException(error);
+      } else if (error instanceof NotFoundException) {
+        throw error; // Re-throw the NotFoundException
+      } else {
+        console.error('Error updating event:', error);
+        throw new Error('Error updating event.');
+      }
+    }
+}
+
 
   async remove(token: string, id: string) {
     try {

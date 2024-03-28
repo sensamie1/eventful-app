@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Post, Body, ValidationPipe, Req, Res, HttpException, HttpStatus, Query, BadRequestException, NotFoundException, UnauthorizedException, UseGuards, ConflictException, UseInterceptors, UploadedFile, Param, GoneException} from '@nestjs/common';
+import { Controller, Get, Render, Post, Body, ValidationPipe, Req, Res, HttpException, HttpStatus, Query, BadRequestException, NotFoundException, UnauthorizedException, UseGuards, ConflictException, UseInterceptors, UploadedFile, Param, GoneException, Patch} from '@nestjs/common';
 import { AppService } from './app.service';
 import { UsersService } from './users/users.service';
 import { CreatorsService } from './creators/creators.service';
@@ -960,6 +960,7 @@ export class AppController {
       }
     }
   }
+
   @Get('views/creators/my-event/:id/admit')
   @UseGuards(CreatorJwtAuthGuard)
   async findMyAdmitEventCreators(
@@ -1046,6 +1047,93 @@ export class AppController {
       } else {
         req.flash('error', 'Creation Error.');
         return res.render('404', {creator: res.locals.creator || null});
+      }
+    }
+  }
+
+  @Get('views/creators/my-event/:id/update')
+  @UseGuards(CreatorJwtAuthGuard)
+  async findMyEventAddSponsorsCreators(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('id') id: string,
+
+  ) {
+    try {
+      const response = await this.eventsService.findOneCreatorEventViews(id);
+      // console.log(response.event);
+      return res.render('creator-add-sponsors', {
+        event: response.event,
+        attendeesTotal: response.attendeesTotal,
+        admittedTotal: response.admittedTotal,
+        creator: res.locals.creator, 
+        messages: req.flash() });
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        req.flash('error', error.message);
+        return res.render('creator-add-sponsors', {creator: res.locals.creator});
+      } else if (error instanceof GoneException) {
+        req.flash('error', error.message);
+        return res.render('creator-add-sponsors', {creator: res.locals.creator});
+      }  else {
+        console.error('Error updating event:', error);
+        req.flash('error', error.message);
+        return res.render('creator-add-sponsors', {creator: res.locals.creator});
+      }
+    }
+  }
+
+  @Post('views/creators/my-event/:id/update')
+  @UseGuards(CreatorJwtAuthGuard)
+  async addSponsorsCreators(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('id') id: string,
+
+  ) {
+    try {
+      const token = req.cookies.creator_jwt
+      const updateDto = req.body
+      const response = await this.eventsService.updateViews(token, id, updateDto);
+      req.flash('success', response.message);
+      return res.redirect(`/views/creators/my-event/${id}`);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        req.flash('error', error.message);
+        return res.redirect(`/views/creators/my-event/${id}`);
+      } else if (error instanceof UnauthorizedException) {
+        req.flash('error', error.message);
+        return res.redirect(`/views/creators/my-event/${id}`);
+      }  else {
+        console.error('Error updating event:', error);
+        req.flash('error', error.message);
+        return res.render('404', {creator: res.locals.creator});
+      }
+    }
+  }
+
+  @Get('views/creators/my-event/:id/delete')
+  async removeEvent(
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    try {
+      const token = req.cookies.creator_jwt;
+      const response = await this.eventsService.remove(token, id);
+      req.flash('success', response.message);
+      return res.redirect('/views/creators/my-events');
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        req.flash('error', error.message);
+        return res.redirect('/views/creators/my-events');
+      } else if (error instanceof UnauthorizedException) {
+        req.flash('error', error.message);
+        return res.redirect('/views/creators/my-events');
+      } else {
+        console.error('Error deleting event:', error);
+        req.flash('error', error.message);
+        return res.render('404', { creator: res.locals.creator });
       }
     }
   }
