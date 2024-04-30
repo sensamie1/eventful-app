@@ -139,12 +139,31 @@
       return new Date(date).toLocaleDateString('en-US', options);
     }
 
+    //window.onload = function() {
+    //  const elements = document.getElementsByClassName('dateElement');
+    //  for (let i = 0; i < elements.length; i++) {
+    //    const currentDate = new Date(elements[i].textContent);
+    //    const formattedDate = formatDate(currentDate);
+    //    elements[i].textContent = formattedDate;
+    //  }
+    //};
+
     window.onload = function() {
       const elements = document.getElementsByClassName('dateElement');
+      const currentDate = new Date(); // Get current date
       for (let i = 0; i < elements.length; i++) {
-        const currentDate = new Date(elements[i].textContent);
-        const formattedDate = formatDate(currentDate);
+        const eventDate = new Date(elements[i].textContent);
+        const formattedDate = formatDate(eventDate);
         elements[i].textContent = formattedDate;
+
+        // Disable buttons if event date has passed
+        if (currentDate > eventDate) {
+          const eventCard = elements[i].closest('.event-card');
+          eventCard.querySelector('.admit-btn').disabled = true;
+          eventCard.querySelector('.edit-btn').disabled = true;
+          eventCard.querySelector('.admit-btn').classList.add('disabled');
+          eventCard.querySelector('.edit-btn').classList.add('disabled');
+        }
       }
     };
 
